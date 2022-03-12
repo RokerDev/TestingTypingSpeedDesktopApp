@@ -153,7 +153,7 @@ class TypeSpeedTest(tk.Tk):
                 self.lbl_display_list1["text"] = self.well_typed_side
 
             # if user finish another word properly
-            if text[0] == " " and text[1] == " ":
+            if self.generated_words_string[0] == " ":
                 self.words_per_minute += 1
                 self.lbl_wpm["text"] = f"Words per Minute: {self.words_per_minute}"
                 self.generate_word()
