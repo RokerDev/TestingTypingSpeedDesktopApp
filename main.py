@@ -48,6 +48,7 @@ class TypeSpeedTest(tk.Tk):
         self.words_list = self.load_words_list()
         self.generated_words_string = ""
         self.well_typed_side = "              "
+        self.ask = True
         self.time = 60
         self.misspells = 0
         self.words_per_minute = 0
@@ -81,11 +82,44 @@ class TypeSpeedTest(tk.Tk):
         seconds = seconds.rjust(2, "0")
         self.lbl_timer["text"] = f"{hours}:{minutes}:{seconds}"
         print(hours, minutes, seconds)
-        self.time -= 10
+        self.time -= 1
         end = self.after(1000, self.update_clock)
         if self.time < 0:
             self.after_cancel(end)
             self.ent_text.config(state=tk.DISABLED)
+            self.try_again()
+
+    def try_again(self):
+        end_message = f"""
+                        Words per minute: {self.words_per_minute}
+                        Chars per minute: {self.chars_per_minute}
+                    Misspells per minute: {self.misspells}
+                    """
+        self.ask = messagebox.askyesno("Want to try again?", end_message)
+        print(self.ask)
+        if not self.ask:
+            self.destroy()
+        else:
+            self.well_typed_side = "              "
+            self.generated_words_string = ""
+            self.ask = "yes"
+            self.lbl_timer["text"] = "00:01:00"
+            self.time = 60
+            self.words_per_minute = 0
+            self.lbl_wpm["text"] = f"Words per Minute: {self.words_per_minute}"
+            self.chars_per_minute = 0
+            self.lbl_cpm["text"] = f"Chars per Minute: {self.chars_per_minute}"
+            self.misspells = 0
+            self.lbl_mpm["text"] = f"Misspells: {self.misspells}"
+            for _ in range(6):
+                self.generate_word()
+
+            self.lbl_display_list["text"] = self.generated_words_string[1:]
+            self.lbl_display_list1["text"] = self.well_typed_side
+            self.ent_text.config(state=tk.NORMAL)
+            self.text_str_var.set(self.generated_words_string[0])
+            self.ent_text.icursor(0)
+            self.ent_text.focus_set()
 
     def user_test(self, *args):
         text = self.text_str_var.get()
