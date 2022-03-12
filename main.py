@@ -1,16 +1,7 @@
 import random
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 
-
-# To do list:
-# TODO: display generated text on label
-# TODO: get user input
-# TODO: check user input with generated text
-# TODO: if correctly typed word then delete it and add + 1 to wpm variable
-# TODO: add timer on GUI
-# TODO: add function displaying user's results
-# TODO: add function say hello to user
 
 class TypeSpeedTest(tk.Tk):
 
@@ -22,19 +13,22 @@ class TypeSpeedTest(tk.Tk):
         self.geometry(f"{int(self.winfo_screenwidth() / 2)}x{int(self.winfo_screenheight() / 4)}")
 
         self.lbl_description = ttk.Label(self, text="Test your typing skills:", font=("Courier", 45))
-        self.lbl_description.grid(column=0, row=0, columnspan=3, pady=15)
+        self.lbl_description.grid(column=0, row=0, columnspan=3, pady=10)
 
-        self.lbl_description1 = ttk.Label(self, text="Words per Minute: ", relief=tk.SUNKEN, font=("Courier", 15), width=20)
-        self.lbl_description1.grid(column=0, row=1, pady=25)
+        self.lbl_timer = ttk.Label(self, text="00:01:00", font=("Courier", 25))
+        self.lbl_timer.grid(column=0, row=1, columnspan=3, pady=10)
 
-        self.lbl_description2 = ttk.Label(self, text="Chars per Minute: ", relief=tk.SUNKEN, font=("Courier", 15), width=20)
-        self.lbl_description2.grid(column=1, row=1,)
+        self.lbl_wpm = ttk.Label(self, text="Words per Minute: ", relief=tk.SUNKEN, font=("Courier", 15), width=23)
+        self.lbl_wpm.grid(column=0, row=2, pady=10)
 
-        self.lbl_description3 = ttk.Label(self, text="Misspells: ", relief=tk.SUNKEN, font=("Courier", 15), width=20)
-        self.lbl_description3.grid(column=2, row=1,)
+        self.lbl_cpm = ttk.Label(self, text="Chars per Minute: ", relief=tk.SUNKEN, font=("Courier", 15), width=23)
+        self.lbl_cpm.grid(column=1, row=2, )
+
+        self.lbl_mpm = ttk.Label(self, text="Misspells: ", relief=tk.SUNKEN, font=("Courier", 15), width=23)
+        self.lbl_mpm.grid(column=2, row=2, )
 
         self.frm_display = ttk.Frame(self, )
-        self.frm_display.grid(column=0, row=2, columnspan=3, pady=15)
+        self.frm_display.grid(column=0, row=3, columnspan=3, pady=10)
         self.lbl_display_list1 = ttk.Label(self.frm_display, relief=tk.SUNKEN, font=("Courier", 40),
                                            background="white", width=14)
         self.lbl_display_list1.pack(side=tk.LEFT, fill=tk.X)
@@ -54,6 +48,7 @@ class TypeSpeedTest(tk.Tk):
         self.words_list = self.load_words_list()
         self.generated_words_string = ""
         self.well_typed_side = "              "
+        self.time = 60
         self.misspells = 0
         self.words_per_minute = 0
         self.chars_per_minute = 0
@@ -78,14 +73,31 @@ class TypeSpeedTest(tk.Tk):
         else:
             self.generated_words_string += f" {generated_word}"
 
+    def update_clock(self):
+        hours = str(self.time // 3600)
+        hours = hours.rjust(2, "0")
+        minutes, seconds = (str(self.time // 60), str(self.time % 60))
+        minutes = minutes.rjust(2, "0")
+        seconds = seconds.rjust(2, "0")
+        self.lbl_timer["text"] = f"{hours}:{minutes}:{seconds}"
+        print(hours, minutes, seconds)
+        self.time -= 10
+        end = self.after(1000, self.update_clock)
+        if self.time < 0:
+            self.after_cancel(end)
+            self.ent_text.config(state=tk.DISABLED)
+
     def user_test(self, *args):
         text = self.text_str_var.get()
 
         if len(text) == 2:
+            if self.time == 60:
+                self.update_clock()
 
             # if user type proper letter then:
             if text[0] == text[1]:
                 self.chars_per_minute += 1
+                self.lbl_cpm["text"] = f"Chars per Minute: {self.chars_per_minute}"
 
                 # add first letter from generated string to end of well typed side label text
                 self.well_typed_side += self.generated_words_string[0]
@@ -109,11 +121,11 @@ class TypeSpeedTest(tk.Tk):
             # if user finish another word properly
             if text[0] == " " and text[1] == " ":
                 self.words_per_minute += 1
+                self.lbl_wpm["text"] = f"Words per Minute: {self.words_per_minute}"
                 self.generate_word()
 
             # if user introduced wrong input
-            else:
-
+            if text[0] != text[1]:
                 # set the same letter to type in entry widget
                 self.text_str_var.set(self.generated_words_string[0])
 
@@ -122,6 +134,7 @@ class TypeSpeedTest(tk.Tk):
 
                 # add 1 to misspell counter
                 self.misspells += 1
+                self.lbl_mpm["text"] = f"Misspells: {self.misspells}"
 
         print(f"WPM: {self.words_per_minute}. CPM: {self.chars_per_minute}.")
 
