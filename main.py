@@ -21,17 +21,32 @@ class TypeSpeedTest(tk.Tk):
         self.title("Type Speed Test Desktop Application")
         self.geometry(f"{int(self.winfo_screenwidth() / 2)}x{int(self.winfo_screenheight() / 4)}")
 
-        self.lbl_display_list1 = ttk.Label(self, relief=tk.SUNKEN, font=("Courier", 40),
+        self.lbl_description = ttk.Label(self, text="Test your typing skills:", font=("Courier", 45))
+        self.lbl_description.grid(column=0, row=0, columnspan=3, pady=15)
+
+        self.lbl_description1 = ttk.Label(self, text="Words per Minute: ", relief=tk.SUNKEN, font=("Courier", 15), width=20)
+        self.lbl_description1.grid(column=0, row=1, pady=25)
+
+        self.lbl_description2 = ttk.Label(self, text="Chars per Minute: ", relief=tk.SUNKEN, font=("Courier", 15), width=20)
+        self.lbl_description2.grid(column=1, row=1,)
+
+        self.lbl_description3 = ttk.Label(self, text="Misspells: ", relief=tk.SUNKEN, font=("Courier", 15), width=20)
+        self.lbl_description3.grid(column=2, row=1,)
+
+        self.frm_display = ttk.Frame(self, )
+        self.frm_display.grid(column=0, row=2, columnspan=3, pady=15)
+        self.lbl_display_list1 = ttk.Label(self.frm_display, relief=tk.SUNKEN, font=("Courier", 40),
                                            background="white", width=14)
         self.lbl_display_list1.pack(side=tk.LEFT, fill=tk.X)
 
         self.text_str_var = tk.StringVar()
         self.text_str_var.trace("w", self.get_user_entry)
 
-        self.ent_text = ttk.Entry(self, font=("Courier", 40), textvariable=self.text_str_var, width=1, )
+        self.ent_text = ttk.Entry(self.frm_display, font=("Courier", 40), textvariable=self.text_str_var, width=1, )
         self.ent_text.pack(side=tk.LEFT, )
 
-        self.lbl_display_list = ttk.Label(self, text="Cos", relief=tk.SUNKEN, font=("Courier", 40), background="white",
+        self.lbl_display_list = ttk.Label(self.frm_display, text="Cos", relief=tk.SUNKEN, font=("Courier", 40),
+                                          background="white",
                                           width=15)
         self.lbl_display_list.pack(side=tk.RIGHT, fill=tk.X)
 
