@@ -40,7 +40,7 @@ class TypeSpeedTest(tk.Tk):
         self.lbl_display_list1.pack(side=tk.LEFT, fill=tk.X)
 
         self.text_str_var = tk.StringVar()
-        self.text_str_var.trace("w", self.get_user_entry)
+        self.text_str_var.trace("w", self.user_test)
 
         self.ent_text = ttk.Entry(self.frm_display, font=("Courier", 40), textvariable=self.text_str_var, width=1, )
         self.ent_text.pack(side=tk.LEFT, )
@@ -78,7 +78,7 @@ class TypeSpeedTest(tk.Tk):
         else:
             self.generated_words_string += f" {generated_word}"
 
-    def get_user_entry(self, *args):
+    def user_test(self, *args):
         text = self.text_str_var.get()
 
         if len(text) == 2:
