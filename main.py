@@ -1,3 +1,4 @@
+import random
 import tkinter as tk
 from tkinter import ttk
 
@@ -32,12 +33,23 @@ class TypeSpeedTest(tk.Tk):
 
         # Backend
         self.words_list = self.load_words_list()
+        self.generated_words_string = ""
+        self.generate_world()
+        self.generate_world()
+        self.generate_world()
 
     @staticmethod
     def load_words_list():
         with open("words-list.txt", mode="r") as words_list:
             temp_list = words_list.readline()
             return temp_list.split(",")
+
+    def generate_word(self):
+        generated_word = random.choice(self.words_list)
+        if self.generated_words_string == "":
+            self.generated_words_string += generated_word
+        else:
+            self.generated_words_string += f" {generated_word}"
 
 
 if __name__ == "__main__":
