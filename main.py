@@ -2,6 +2,16 @@ import tkinter as tk
 from tkinter import ttk
 
 
+# To do list:
+# TODO: add text generator
+# TODO: display generated text on label
+# TODO: get user input
+# TODO: check user input with generated text
+# TODO: if correctly typed word then delete it and add + 1 to wpm variable
+# TODO: add timer on GUI
+# TODO: add function displaying user's results
+# TODO: add function say hello to user
+
 class TypeSpeedTest(tk.Tk):
 
     def __init__(self):
@@ -21,6 +31,13 @@ class TypeSpeedTest(tk.Tk):
         self.rowconfigure(1, minsize=60, weight=1, )
 
         # Backend
+        self.words_list = self.load_words_list()
+
+    @staticmethod
+    def load_words_list():
+        with open("words-list.txt", mode="r") as words_list:
+            temp_list = words_list.readline()
+            return temp_list.split(",")
 
 
 if __name__ == "__main__":
